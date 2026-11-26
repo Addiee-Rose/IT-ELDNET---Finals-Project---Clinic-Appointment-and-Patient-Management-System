@@ -1,1 +1,37 @@
+@model IEnumerable<ClinicSystem.Models.ConsultationRecord>
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "Consultation Records";
+    bool isDoctor = User.IsInRole("Doctor");
+}
 
+<h2>Consultation Records</h2>
+
+<table class="table table-striped table-hover bg-white">
+    <thead class="table-dark">
+        <tr><th>Date</th><th>Patient</th><th>Doctor</th><th>Diagnosis</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ConsultationDate.ToString("yyyy-MM-dd")</td>
+            <td>@(item.Appointment?.Patient?.FullName)</td>
+            <td>@(item.Appointment?.Doctor?.FullName)</td>
+            <td>@item.Diagnosis</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.RecordId">Details</a>
+                @if (isDoctor)
+                {
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.RecordId">Edit</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No consultation records found.</p>
+}
