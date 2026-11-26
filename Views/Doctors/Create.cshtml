@@ -1,1 +1,67 @@
+@model ClinicSystem.ViewModels.DoctorCreateViewModel
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "Add Doctor";
+}
 
+<h2>Add Doctor</h2>
+<div class="row"><div class="col-md-7">
+<div class="card"><div class="card-body">
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <h5>Login account</h5>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <h5 class="mt-4">Doctor details</h5>
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Specialization" class="form-label"></label>
+        <input asp-for="Specialization" class="form-control" />
+        <span asp-validation-for="Specialization" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AvailableDays" class="form-label"></label>
+        <input asp-for="AvailableDays" class="form-control" placeholder="Mon, Wed, Fri" />
+        <span asp-validation-for="AvailableDays" class="text-danger"></span>
+    </div>
+
+    @* Time inputs are written by hand so the value is always shown as HH:mm *@
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="StartTime" class="form-label">Start Time</label>
+            <input type="time" id="StartTime" name="StartTime" class="form-control" value="@(Model.StartTime.ToString("hh\\:mm"))" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="EndTime" class="form-label">End Time</label>
+            <input type="time" id="EndTime" name="EndTime" class="form-control" value="@(Model.EndTime.ToString("hh\\:mm"))" />
+            <span asp-validation-for="EndTime" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+</form>
+</div></div>
+</div></div>
