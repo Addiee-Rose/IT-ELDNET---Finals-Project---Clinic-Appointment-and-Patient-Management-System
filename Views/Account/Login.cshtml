@@ -1,1 +1,44 @@
+@model ClinicSystem.ViewModels.LoginViewModel
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "Login";
+}
 
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="mb-3">Login</h2>
+
+                <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label"></label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+
+                <hr />
+                <small class="text-muted">
+                    Demo accounts (password <strong>Clinic@@123</strong>):
+                    staff1@@clinic.test, doctor1@@clinic.test, patient1@@clinic.test
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
