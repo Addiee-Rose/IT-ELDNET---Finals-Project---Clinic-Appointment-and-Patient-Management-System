@@ -1,1 +1,22 @@
+@model ClinicSystem.Models.Doctor
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "Delete Doctor";
+}
 
+<h2>Delete Doctor</h2>
+<div class="alert alert-warning">Are you sure you want to delete this doctor? This also removes the login account.</div>
+
+<div class="card mb-3"><div class="card-body">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">Full Name</dt><dd class="col-sm-9">@Model.FullName</dd>
+        <dt class="col-sm-3">Specialization</dt><dd class="col-sm-9">@Model.Specialization</dd>
+        <dt class="col-sm-3">Available Days</dt><dd class="col-sm-9">@Model.AvailableDays</dd>
+    </dl>
+</div></div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" name="id" value="@Model.DoctorId" />
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+</form>
