@@ -1,1 +1,68 @@
+@model IEnumerable<ClinicSystem.Models.Appointment>
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "Appointments";
+    string? currentStatus = ViewData["StatusFilter"] as string;
+    bool isStaff = User.IsInRole("Staff");
+    bool isDoctor = User.IsInRole("Doctor");
+    bool isPatient = User.IsInRole("Patient");
+}
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Appointments</h2>
+    @if (isPatient)
+    {
+        <a class="btn btn-primary" asp-action="Create">+ Request Appointment</a>
+    }
+</div>
+
+<div class="mb-3">
+    <a class="btn btn-sm @(string.IsNullOrEmpty(currentStatus) ? "btn-dark" : "btn-outline-dark")" asp-action="Index">All</a>
+    @foreach (var s in new[] { "Pending", "Approved", "Completed", "Cancelled" })
+    {
+        <a class="btn btn-sm @(currentStatus == s ? "btn-dark" : "btn-outline-dark")" asp-action="Index" asp-route-status="@s">@s</a>
+    }
+</div>
+
+<table class="table table-striped table-hover bg-white">
+    <thead class="table-dark">
+        <tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.AppointmentDate.ToString("yyyy-MM-dd")</td>
+            <td>@(item.AppointmentTime.ToString("hh\\:mm"))</td>
+            <td>@(item.Patient?.FullName)</td>
+            <td>@(item.Doctor?.FullName)</td>
+            <td>@item.Reason</td>
+            <td><partial name="_StarterStatusBadge" model="item.Status" /></td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.AppointmentId">Details</a>
+
+                @if (isStaff && item.Status == "Pending")
+                {
+                    <form asp-action="Approve" asp-route-id="@item.AppointmentId" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                }
+                @if (isStaff && (item.Status == "Pending" || item.Status == "Approved"))
+                {
+                    <a class="btn btn-sm btn-warning" asp-action="Reschedule" asp-route-id="@item.AppointmentId">Reschedule</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Cancel" asp-route-id="@item.AppointmentId">Cancel</a>
+                }
+                @if (isDoctor && item.Status == "Approved")
+                {
+                    <a class="btn btn-sm btn-primary" asp-controller="ConsultationRecords" asp-action="Create" asp-route-appointmentId="@item.AppointmentId">Add Consultation Record</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No appointments found.</p>
+}
