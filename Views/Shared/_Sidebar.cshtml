@@ -1,1 +1,57 @@
+@model string
+@functions {
+    // One menu entry. AnyAction = highlight whenever we are on this controller.
+    public record NavItem(string Label, string Icon, string Controller, string Action, bool AnyAction = false);
+}
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
+    // DESIGN RECOMMENDATION: controller/action names below are PROPOSED.
+    // They must be confirmed with the backend teammates. Change them only here.
+    var dashboard = new NavItem("Dashboard", "bi-grid-1x2-fill", "Home", "Index");
+
+    NavItem[] items = Model switch
+    {
+        "Patient" => new[]
+        {
+            dashboard,
+            new NavItem("My Appointments", "bi-calendar2-check", "Appointments", "Index"),
+            new NavItem("Request Appointment", "bi-calendar-plus", "Appointments", "Create"),
+            new NavItem("My Consultation Records", "bi-file-medical", "ConsultationRecords", "Index", true),
+            new NavItem("My Profile", "bi-person-vcard", "Patients", "MyProfile")
+        },
+        "ClinicStaff" => new[]
+        {
+            dashboard,
+            new NavItem("Patients", "bi-people-fill", "Patients", "Index", true),
+            new NavItem("Doctors", "bi-person-badge-fill", "Doctors", "Index", true),
+            new NavItem("Appointments", "bi-calendar2-week", "Appointments", "Index", true),
+            new NavItem("Consultation Records", "bi-file-medical", "ConsultationRecords", "Index", true)
+        },
+        "Doctor" => new[]
+        {
+            dashboard,
+            new NavItem("My Schedule", "bi-clock-history", "Doctors", "MySchedule"),
+            new NavItem("My Appointments", "bi-calendar2-check", "Appointments", "Index"),
+            new NavItem("Consultation Records", "bi-file-medical", "ConsultationRecords", "Index", true)
+        },
+        _ => Array.Empty<NavItem>()
+    };
+}
+
+<div class="sidebar-section">Menu</div>
+@foreach (var item in items)
+{
+    var isActive = item.Controller.Equals(currentController, StringComparison.OrdinalIgnoreCase)
+                   && (item.AnyAction || item.Action.Equals(currentAction, StringComparison.OrdinalIgnoreCase));
+
+    <a class="sidebar-link @(isActive ? "active" : "")" asp-controller="@item.Controller" asp-action="@item.Action">
+        <i class="bi @item.Icon"></i><span>@item.Label</span>
+    </a>
+}
+
+<div class="sidebar-section">General</div>
+<a class="sidebar-link @(currentAction == "About" ? "active" : "")" asp-controller="Home" asp-action="About">
+    <i class="bi bi-info-circle"></i><span>About / Contact</span>
+</a>
