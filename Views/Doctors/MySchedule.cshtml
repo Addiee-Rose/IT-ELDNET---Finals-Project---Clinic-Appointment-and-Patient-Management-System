@@ -1,1 +1,48 @@
+@model ClinicSystem.Models.Doctor
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "My Schedule";
+}
 
+<h2>My Schedule</h2>
+<div class="card mb-4"><div class="card-body">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">Name</dt><dd class="col-sm-9">@Model.FullName</dd>
+        <dt class="col-sm-3">Specialization</dt><dd class="col-sm-9">@Model.Specialization</dd>
+        <dt class="col-sm-3">Available Days</dt><dd class="col-sm-9">@Model.AvailableDays</dd>
+        <dt class="col-sm-3">Hours</dt><dd class="col-sm-9">@(Model.StartTime.ToString("hh\\:mm")) - @(Model.EndTime.ToString("hh\\:mm"))</dd>
+    </dl>
+</div></div>
+
+<h4>My Appointments</h4>
+@if (Model.Appointments == null || !Model.Appointments.Any())
+{
+    <p class="text-muted">No appointments yet.</p>
+}
+else
+{
+    <table class="table table-striped bg-white">
+        <thead class="table-dark">
+            <tr><th>Date</th><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+        @foreach (var a in Model.Appointments.OrderBy(x => x.AppointmentDate).ThenBy(x => x.AppointmentTime))
+        {
+            <tr>
+                <td>@a.AppointmentDate.ToString("yyyy-MM-dd")</td>
+                <td>@(a.AppointmentTime.ToString("hh\\:mm"))</td>
+                <td>@(a.Patient?.FullName)</td>
+                <td>@a.Reason</td>
+                <td><partial name="_StarterStatusBadge" model="a.Status" /></td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-info" asp-controller="Appointments" asp-action="Details" asp-route-id="@a.AppointmentId">Details</a>
+                    @if (a.Status == "Approved")
+                    {
+                        <a class="btn btn-sm btn-primary" asp-controller="ConsultationRecords" asp-action="Create" asp-route-appointmentId="@a.AppointmentId">Add Consultation Record</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
