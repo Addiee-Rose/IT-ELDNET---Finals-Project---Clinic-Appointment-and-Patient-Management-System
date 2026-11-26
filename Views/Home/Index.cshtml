@@ -1,1 +1,19 @@
+@{
+    Layout = "_StarterLayout";
+    ViewData["Title"] = "Home";
+}
 
+<div class="p-5 bg-white rounded shadow-sm">
+    <h1>Clinic Appointment and Patient Management System</h1>
+    <p class="lead">Starter page for testing the back-end.</p>
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <p>You are logged in as <strong>@User.Identity.Name</strong>.</p>
+        <a class="btn btn-primary" asp-controller="Appointments" asp-action="Index">Go to Appointments</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
+    }
+</div>
