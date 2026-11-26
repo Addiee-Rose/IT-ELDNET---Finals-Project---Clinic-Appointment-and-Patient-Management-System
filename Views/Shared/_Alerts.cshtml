@@ -1,1 +1,20 @@
-
+@{
+    var alertTypes = new (string Key, string Css, string Icon)[]
+    {
+        ("Success", "alert-success", "bi-check-circle-fill"),
+        ("Error",   "alert-danger",  "bi-exclamation-triangle-fill"),
+        ("Warning", "alert-warning", "bi-exclamation-circle-fill"),
+        ("Info",    "alert-info",    "bi-info-circle-fill")
+    };
+}
+@foreach (var a in alertTypes)
+{
+    if (TempData[a.Key] is string message && !string.IsNullOrWhiteSpace(message))
+    {
+        <div class="alert @a.Css alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="bi @a.Icon me-2"></i>
+            <div>@message</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
